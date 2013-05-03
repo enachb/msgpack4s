@@ -17,3 +17,13 @@ unmanagedSourceDirectories in Test <++= Seq(baseDirectory(_ / "test" )).join
 // Testing deps
 libraryDependencies ++= Seq("org.scalatest" %% "scalatest" % "1.9.1" % "test",
                             "org.mockito" % "mockito-all" % "1.9.0" % "test")
+
+publishMavenStyle := true
+
+credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
+
+publishTo <<= (version) { version: String =>
+    val nexus = "http://m0.quantifind.com:8082/nexus/content/repositories/"
+    if (version.trim.endsWith("SNAPSHOT")) Some("snapshots" at nexus + "ext-snapshots/")
+    else                                   Some("releases" at nexus + "ext-releases/")
+}
